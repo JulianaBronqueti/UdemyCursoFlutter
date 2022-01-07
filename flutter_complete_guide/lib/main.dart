@@ -2,24 +2,31 @@
 
 import 'package:flutter/material.dart';
 
+import './question.dart';
+
 // Outro jeito de escrever uma função que abriga só uma linha de código em si
 void main() => runApp(MyApp());
 
 class MyApp extends StatefulWidget {
   @override
   State<StatefulWidget> createState() {
-    return MyAppState();
+    return _MyAppState();
   }
 }
 
-class MyAppState extends State<MyApp> {
-  var questions = ["What's your favorite color?", "What's your favorite food?"];
-  var questionIndex = 0;
-  void changeQuestion() {
+class _MyAppState extends State<MyApp> {
+  var _questions = [
+    "What's your favorite color?",
+    "What's your favorite food?"
+  ];
+  var _questionIndex = 0;
+  void _changeQuestion() {
     setState(() {
-      questionIndex = questionIndex + 1;
+      if (_questionIndex + 1 < _questions.length) {
+        _questionIndex = _questionIndex + 1;
+      }
     });
-    print(questionIndex);
+    print(_questionIndex);
   }
 
   @override
@@ -31,18 +38,18 @@ class MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Text(questions[questionIndex]),
+            Question(_questions[_questionIndex]),
             RaisedButton(
               child: Text("Answer 1"),
-              onPressed: changeQuestion,
+              onPressed: _changeQuestion,
             ),
             RaisedButton(
               child: Text("Answer 2"),
-              onPressed: changeQuestion,
+              onPressed: _changeQuestion,
             ),
             RaisedButton(
               child: Text("Answer 3"),
-              onPressed: changeQuestion,
+              onPressed: _changeQuestion,
             ),
           ],
         ),
