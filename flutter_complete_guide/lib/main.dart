@@ -3,6 +3,7 @@
 import 'package:flutter/material.dart';
 
 import './question.dart';
+import './answer.dart';
 
 // Outro jeito de escrever uma função que abriga só uma linha de código em si
 void main() => runApp(MyApp());
@@ -16,9 +17,20 @@ class MyApp extends StatefulWidget {
 
 class _MyAppState extends State<MyApp> {
   var _questions = [
-    "What's your favorite color?",
-    "What's your favorite food?"
+    {
+      "questionText": "What's your favorite color?",
+      "answers": ["Blue", "Red", "Yellow", "Green", "Black"]
+    },
+    {
+      "questionText": "What's your favorite food?",
+      "answers": ["Pizza", "Barbecue", "Hamburguer"]
+    },
+    {
+      "questionText": "What's your favorite book?",
+      "answers": ["Coding Interview", "HP", "Data Structures", "M.A."]
+    },
   ];
+
   var _questionIndex = 0;
   void _changeQuestion() {
     setState(() {
@@ -38,19 +50,11 @@ class _MyAppState extends State<MyApp> {
         ),
         body: Column(
           children: [
-            Question(_questions[_questionIndex]),
-            RaisedButton(
-              child: Text("Answer 1"),
-              onPressed: _changeQuestion,
-            ),
-            RaisedButton(
-              child: Text("Answer 2"),
-              onPressed: _changeQuestion,
-            ),
-            RaisedButton(
-              child: Text("Answer 3"),
-              onPressed: _changeQuestion,
-            ),
+            Question(_questions[_questionIndex]["questionText"] as String),
+            ...(_questions[_questionIndex]["answers"] as List<String>)
+                .map((answer) {
+              return Answer(_changeQuestion, answer);
+            }).toList()
           ],
         ),
       ),
