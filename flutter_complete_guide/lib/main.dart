@@ -1,9 +1,10 @@
 // ignore_for_file: deprecated_member_use
 
 import 'package:flutter/material.dart';
+import 'package:flutter_complete_guide/result.dart';
 
-import './question.dart';
-import './answer.dart';
+import './quiz.dart';
+import './result.dart';
 
 // Outro jeito de escrever uma função que abriga só uma linha de código em si
 void main() => runApp(MyApp());
@@ -19,26 +20,53 @@ class _MyAppState extends State<MyApp> {
   var _questions = [
     {
       "questionText": "What's your favorite color?",
-      "answers": ["Blue", "Red", "Yellow", "Green", "Black"]
+      "answers": [
+        {"text": "Blue", "score": 6},
+        {"text": "Red", "score": 7},
+        {"text": "Yellow", "score": 10},
+        {"text": "Green", "score": 3},
+        {"text": "Black", "score": 9},
+      ]
     },
     {
       "questionText": "What's your favorite food?",
-      "answers": ["Pizza", "Barbecue", "Hamburguer"]
+      "answers": [
+        {"text": "Pizza", "score": 10},
+        {"text": "Hamburguer", "score": 9},
+        {"text": "Salad", "score": 2},
+      ]
     },
     {
       "questionText": "What's your favorite book?",
-      "answers": ["Coding Interview", "HP", "Data Structures", "M.A."]
+      "answers": [
+        {"text": "Coding Interview", "score": 4},
+        {"text": "HP", "score": 7},
+        {"text": "Data Structures", "score": 3},
+        {"text": "Any Machado de Assis", "score": 10},
+      ]
     },
   ];
 
   var _questionIndex = 0;
-  void _changeQuestion() {
+  var _totalScore = 0;
+
+  void _restartQuiz() {
     setState(() {
-      if (_questionIndex + 1 < _questions.length) {
+      _questionIndex = 0;
+      _totalScore = 0;
+    });
+  }
+
+  void _answerClick(int score) {
+    setState(() {
+      if (_questionIndex + 1 <= _questions.length) {
         _questionIndex = _questionIndex + 1;
       }
     });
-    print(_questionIndex);
+    //print(_questionIndex);
+
+    _totalScore += score;
+    //print(_totalScore);
   }
 
   @override
@@ -48,15 +76,13 @@ class _MyAppState extends State<MyApp> {
         appBar: AppBar(
           title: Text("My First App"),
         ),
-        body: Column(
-          children: [
-            Question(_questions[_questionIndex]["questionText"] as String),
-            ...(_questions[_questionIndex]["answers"] as List<String>)
-                .map((answer) {
-              return Answer(_changeQuestion, answer);
-            }).toList()
-          ],
-        ),
+        body: _questionIndex < _questions.length
+            ? Quiz(
+                questions: _questions,
+                questionIndex: _questionIndex,
+                answerClick: _answerClick,
+              )
+            : Result(_totalScore, _restartQuiz),
       ),
     );
   }
